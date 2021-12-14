@@ -1,10 +1,7 @@
 <br/>
 <h2 align="middle">JS 문벅스 카페메뉴 앱</h2>
-<p>
-  
-![moonbucks](https://user-images.githubusercontent.com/84560867/146002913-fb8c54fd-05b2-4cba-b631-f92739b8fb46.png)
-  
-</p>
+<p align="middle">
+  <img width="200px;" src="https://user-images.githubusercontent.com/84560867/146002913-fb8c54fd-05b2-4cba-b631-f92739b8fb46.png"/>
 <p align="middle">Vanilla JS로 구현 하는 상태관리가 가능한 카페메뉴 앱</p>
 <p align="middle">
   <img src="https://img.shields.io/badge/version-1.0.0-blue?style=flat-square" alt="template version"/>
