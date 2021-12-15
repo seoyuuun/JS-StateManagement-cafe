@@ -1,4 +1,7 @@
 <br/>
+<p align="middle">
+  <img width="200px;" src="./src/images/moonbucks.png"/>
+</p>
 <h2 align="middle">JS 문벅스 카페메뉴 앱</h2>
 <p align="middle">
   <img width="200px;" src="https://user-images.githubusercontent.com/84560867/146002913-fb8c54fd-05b2-4cba-b631-f92739b8fb46.png"/>
@@ -30,6 +33,9 @@
 
 ## 🔥 Projects!
 
+<p align="middle">
+  <img width="400" src="./src/images/moonbucks-main.png">
+</p>
 
 <p align="middle">
   <a href="https://blackcoffee-study.github.io/moonbucks-menu/">🖥️ 데모 링크</a>
