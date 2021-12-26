@@ -17,6 +17,10 @@ function App() {
     e.preventDefault();
   });
 
+  const esspressoMenuName = () => {};
+
+  $("#espresso-menu-submit-button").addEventListener("click", (e) => {});
+
   // 메뉴 input 입력값을 받아온다.
   $("#espresso-menu-name").addEventListener("keypress", (e) => {
     if (e.key !== "Enter") {
