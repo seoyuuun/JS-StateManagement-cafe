@@ -8,11 +8,25 @@
 // - [o] 메뉴가 추가되고 나면, input은 빈 값으로 초기화한다.
 // - [o] 사용자 입력값이 빈 값이라면 추가되지 않는다.
 
+// TODO 메뉴 수정
+// - [o] 메뉴의 수정 버튼을 눌러 메뉴 이름 수정할 수 있다.
+// - [o] 메뉴 수정시 브라우저에서 제공하는 `prompt` 인터페이스를 활용한다.
+
 // util 같은 함수
 const $ = (selector) => document.querySelector(selector);
 
 function App() {
-  // form 태그가 자동으로 전송되는 것을 막아준다.
+  $("#espresso-menu-list").addEventListener("click", (e) => {
+    if (e.target.classList.contains("menu-edit-button")) {
+      const $menuName = e.target.closest("li").querySelector(".menu-name");
+      const editedMenuName = prompt(
+        "수정할 메뉴명을 입력해주세요",
+        $menuName.innerText
+      );
+      $menuName.innerText = editedMenuName;
+    }
+  });
+
   $("#espresso-menu-form").addEventListener("submit", (e) => {
     e.preventDefault();
   });
@@ -66,10 +80,6 @@ function App() {
 }
 
 App();
-
-// TODO 메뉴 수정
-// - [ ] 메뉴의 수정 버튼을 눌러 메뉴 이름 수정할 수 있다.
-// - [ ] 메뉴 수정시 브라우저에서 제공하는 `prompt` 인터페이스를 활용한다.
 
 // TODO 메뉴 삭제
 // - [ ] 메뉴 삭제 버튼을 이용하여 메뉴 삭제할 수 있다.
