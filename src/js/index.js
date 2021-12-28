@@ -5,25 +5,20 @@ const store = {
     localStorage.setItem("menu", JSON.stringify(menu));
   },
   getLocalStorage() {
-    localStorage.getItem("menu");
+    return JSON.parse(localStorage.getItem("menu"));
   },
 };
 
 function App() {
   this.menu = [];
-
-  const updateMenuCnt = () => {
-    const menuCnt = $("#espresso-menu-list").querySelectorAll("li").length;
-    $(".menu-count").innerText = `총 ${menuCnt}개`;
-  };
-  const addMenuName = () => {
-    if ($("#espresso-menu-name").value === "") {
-      alert("값을 입력해주세요");
-      return;
+  this.init = () => {
+    if (store.getLocalStorage().length >= 1) {
+      this.menu = store.getLocalStorage();
     }
-    const espressoMenuName = $("#espresso-menu-name").value;
-    this.menu.push({ name: espressoMenuName });
-    store.setLocalStorage(this.menu);
+    render();
+  };
+
+  const render = () => {
     const template = this.menu
       .map((item, index) => {
         return `
@@ -44,9 +39,22 @@ function App() {
       </li>`;
       })
       .join("");
-
     $("#espresso-menu-list").innerHTML = template;
     updateMenuCnt();
+  };
+  const updateMenuCnt = () => {
+    const menuCnt = $("#espresso-menu-list").querySelectorAll("li").length;
+    $(".menu-count").innerText = `총 ${menuCnt}개`;
+  };
+  const addMenuName = () => {
+    if ($("#espresso-menu-name").value === "") {
+      alert("값을 입력해주세요");
+      return;
+    }
+    const espressoMenuName = $("#espresso-menu-name").value;
+    this.menu.push({ name: espressoMenuName });
+    store.setLocalStorage(this.menu);
+    render();
     $("#espresso-menu-name").value = "";
   };
   const updateMenuName = (e) => {
@@ -62,6 +70,9 @@ function App() {
   };
   const deleteMenuName = (e) => {
     if (confirm("정말 삭제하시겠습니다?") == true) {
+      const menuId = e.target.closest("li").dataset.menuId;
+      this.menu.splice(menuId, 1);
+      store.setLocalStorage(this.menu);
       e.target.closest("li").remove();
       updateMenuCnt();
     }
@@ -93,3 +104,4 @@ function App() {
 
 // App();으로 실행하여 Typeerror 발생 -> new 키워드를 사용해서 실행하여 에러 해결
 const app = new App();
+app.init();
