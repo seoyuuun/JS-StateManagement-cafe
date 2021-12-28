@@ -1,7 +1,17 @@
 // util 같은 함수
 const $ = (selector) => document.querySelector(selector);
+const store = {
+  setLocalStorage(menu) {
+    localStorage.setItem("menu", JSON.stringify(menu));
+  },
+  getLocalStorage() {
+    localStorage.getItem("menu");
+  },
+};
 
 function App() {
+  this.menu = [];
+
   const updateMenuCnt = () => {
     const menuCnt = $("#espresso-menu-list").querySelectorAll("li").length;
     $(".menu-count").innerText = `총 ${menuCnt}개`;
@@ -12,10 +22,13 @@ function App() {
       return;
     }
     const espressoMenuName = $("#espresso-menu-name").value;
-    const menuItemTemplate = (espressoMenuName) => {
-      return `
+    this.menu.push({ name: espressoMenuName });
+    store.setLocalStorage(this.menu);
+    const template = this.menu
+      .map((item) => {
+        return `
         <li class="menu-list-item d-flex items-center py-2">
-        <span class="w-100 pl-2 menu-name">${espressoMenuName}</span>
+        <span class="w-100 pl-2 menu-name">${item.name}</span>
         <button
           type="button"
           class="bg-gray-50 text-gray-500 text-sm mr-1 menu-edit-button"
@@ -29,13 +42,10 @@ function App() {
           삭제
         </button>
       </li>`;
-    };
-    $("#espresso-menu-list").insertAdjacentHTML(
-      "beforeend",
-      menuItemTemplate(espressoMenuName)
-    );
+      })
+      .join("");
 
-    // count 변수 = li 갯수를 카운팅
+    $("#espresso-menu-list").innerHTML = template;
     updateMenuCnt();
     $("#espresso-menu-name").value = "";
   };
@@ -78,4 +88,5 @@ function App() {
   });
 }
 
-App();
+// App();으로 실행하여 Typeerror 발생 -> new 키워드를 사용해서 실행하여 에러 해결
+const app = new App();
