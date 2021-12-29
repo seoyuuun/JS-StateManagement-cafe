@@ -1,6 +1,8 @@
 import { $ } from "./utils/dom.js";
 import store from "./store/index.js";
 
+const BASE_URL = "http://localhost:3000/api";
+
 function App() {
   this.menu = {
     espresso: [],
@@ -9,7 +11,9 @@ function App() {
     teavana: [],
     dessert: [],
   };
+
   this.currentCategory = "espresso";
+
   this.init = () => {
     if (store.getLocalStorage()) {
       this.menu = store.getLocalStorage();
@@ -50,21 +54,37 @@ function App() {
     $("#menu-list").innerHTML = template;
     updateMenuCnt();
   };
+
   const updateMenuCnt = () => {
     const menuCnt = this.menu[this.currentCategory].length;
     $(".menu-count").innerText = `총 ${menuCnt}개`;
   };
+
   const addMenuName = () => {
     if ($("#menu-name").value === "") {
       alert("값을 입력해주세요");
       return;
     }
     const menuName = $("#menu-name").value;
-    this.menu[this.currentCategory].push({ name: menuName });
+    // this.menu[this.currentCategory].push({ name: menuName });
+    fetch(`${BASE_URL}/category/${this.currentCategory}/menu`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: menuName }),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+      });
     store.setLocalStorage(this.menu);
     render();
     $("#menu-name").value = "";
   };
+
   const updateMenuName = (e) => {
     const menuId = e.target.closest("li").dataset.menuId;
     const $menuName = e.target.closest("li").querySelector(".menu-name");
@@ -76,6 +96,7 @@ function App() {
     store.setLocalStorage(this.menu);
     render();
   };
+
   const deleteMenuName = (e) => {
     if (confirm("정말 삭제하시겠습니다?") == true) {
       const menuId = e.target.closest("li").dataset.menuId;
@@ -84,6 +105,7 @@ function App() {
       render();
     }
   };
+
   const displaySoldOut = (e) => {
     const menuId = e.target.closest("li").dataset.menuId;
     this.menu[this.currentCategory][menuId].soldOut =
@@ -91,6 +113,7 @@ function App() {
     store.setLocalStorage(this.menu);
     render();
   };
+
   const initEventListeners = () => {
     $("#menu-form").addEventListener("submit", (e) => {
       e.preventDefault();
