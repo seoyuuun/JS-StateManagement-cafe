@@ -1,13 +1,5 @@
-// util 같은 함수
-const $ = (selector) => document.querySelector(selector);
-const store = {
-  setLocalStorage(menu) {
-    localStorage.setItem("menu", JSON.stringify(menu));
-  },
-  getLocalStorage() {
-    return JSON.parse(localStorage.getItem("menu"));
-  },
-};
+import { $ } from "./utils/dom.js";
+import store from "./store/index.js";
 
 function App() {
   this.menu = {
@@ -23,6 +15,7 @@ function App() {
       this.menu = store.getLocalStorage();
     }
     render();
+    initEventListeners();
   };
 
   const render = () => {
@@ -58,7 +51,7 @@ function App() {
     updateMenuCnt();
   };
   const updateMenuCnt = () => {
-    const menuCnt = $("#menu-list").querySelectorAll("li").length;
+    const menuCnt = this.menu[this.currentCategory].length;
     $(".menu-count").innerText = `총 ${menuCnt}개`;
   };
   const addMenuName = () => {
@@ -81,15 +74,14 @@ function App() {
     );
     this.menu[this.currentCategory][menuId].name = editedMenuName;
     store.setLocalStorage(this.menu);
-    $menuName.innerText = editedMenuName;
+    render();
   };
   const deleteMenuName = (e) => {
     if (confirm("정말 삭제하시겠습니다?") == true) {
       const menuId = e.target.closest("li").dataset.menuId;
       this.menu[this.currentCategory].splice(menuId, 1);
       store.setLocalStorage(this.menu);
-      e.target.closest("li").remove();
-      updateMenuCnt();
+      render();
     }
   };
   const displaySoldOut = (e) => {
@@ -99,45 +91,47 @@ function App() {
     store.setLocalStorage(this.menu);
     render();
   };
+  const initEventListeners = () => {
+    $("#menu-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+    });
 
-  $("#menu-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-  });
+    $("#menu-submit-button").addEventListener("click", addMenuName);
 
-  $("#menu-submit-button").addEventListener("click", addMenuName);
+    // 메뉴 input 입력값을 받아온다.
+    $("#menu-name").addEventListener("keypress", (e) => {
+      if (e.key !== "Enter") {
+        return;
+      }
+      addMenuName();
+    });
 
-  // 메뉴 input 입력값을 받아온다.
-  $("#menu-name").addEventListener("keypress", (e) => {
-    if (e.key !== "Enter") {
-      return;
-    }
-    addMenuName();
-  });
+    $("#menu-list").addEventListener("click", (e) => {
+      if (e.target.classList.contains("menu-edit-button")) {
+        updateMenuName(e);
+        return;
+      }
+      if (e.target.classList.contains("menu-remove-button")) {
+        deleteMenuName(e);
+        return;
+      }
+      if (e.target.classList.contains("menu-sold-out-button")) {
+        displaySoldOut(e);
+        return;
+      }
+    });
 
-  $("#menu-list").addEventListener("click", (e) => {
-    if (e.target.classList.contains("menu-edit-button")) {
-      updateMenuName(e);
-      return;
-    }
-    if (e.target.classList.contains("menu-remove-button")) {
-      deleteMenuName(e);
-      return;
-    }
-    if (e.target.classList.contains("menu-sold-out-button")) {
-      displaySoldOut(e);
-      return;
-    }
-  });
-
-  $("nav").addEventListener("click", (e) => {
-    const isCategoryButton = e.target.classList.contains("cafe-category-name");
-    if (isCategoryButton) {
-      const categoryName = e.target.dataset.categoryName;
-      this.currentCategory = categoryName;
-      $("#category-title").innerText = `${e.target.innerText} 메뉴 관리`;
-      render();
-    }
-  });
+    $("nav").addEventListener("click", (e) => {
+      const isCategoryButton =
+        e.target.classList.contains("cafe-category-name");
+      if (isCategoryButton) {
+        const categoryName = e.target.dataset.categoryName;
+        this.currentCategory = categoryName;
+        $("#category-title").innerText = `${e.target.innerText} 메뉴 관리`;
+        render();
+      }
+    });
+  };
 }
 
 // App();으로 실행하여 Typeerror 발생 -> new 키워드를 사용해서 실행하여 에러 해결
