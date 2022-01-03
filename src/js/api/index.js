@@ -1,3 +1,5 @@
+const BASE_URL = "http://localhost:3000/api";
+
 const MenuApi = {
   async getAllMenuByCategory(category) {
     const response = await fetch(`${BASE_URL}/category/${category}/menu`);
@@ -63,3 +65,5 @@ const MenuApi = {
     }
   },
 };
+
+export default MenuApi;
